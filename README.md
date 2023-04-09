@@ -1,4 +1,4 @@
-# Shoe Size Converter :athletic_shoe:
+# Shoe Converter :athletic_shoe:
 
 Making it possible to convert the shoe size and gender of one brand to another
 
