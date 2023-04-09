@@ -5,6 +5,12 @@ enum Gender {
   Women = "women",
 }
 
-const CM_SYSTEM = "cm" as const;
+const System = {
+  cm: "cm",
+  eu: "eu",
+  jp: "jp",
+  uk: "uk",
+  us: "us",
+} as const;
 
-export { Gender, CM_SYSTEM };
+export { Gender, System };

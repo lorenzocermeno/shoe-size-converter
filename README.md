@@ -32,8 +32,8 @@ const result = convert({
 
 | **Parameter** | **Type** | **Description**                                                             |
 | ------------- | -------- | --------------------------------------------------------------------------- |
-| `brand`       | `string` | The brand of the shoe (e.g., Nike, Adidas, New Balance)                     |
-| `system`      | `string` | The sizing system (e.g., eu, us, cm)                                        |
+| `brand`       | `string` | The brand of the shoe (e.g., Nike, Adidas)                                  |
+| `system`      | `string` | The sizing system (e.g., eu, jp, uk, us)                                    |
 | `gender`      | `string` | The gender, as provided by the shoe makers (e.g., men, women, male, female) |
 | `size`        | `string` | The size of the shoe (e.g., 41 1/3, 8, 10.5)                                |
 

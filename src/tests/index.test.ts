@@ -65,6 +65,11 @@ describe("src/index.ts", () => {
     to: convertTo("adidas", "us", "women"),
   };
 
+  const jpToCm: IConvert = {
+    from: convertFrom("nike", "jp", "men", "30"),
+    to: convertTo("nike", "cm", "women"),
+  };
+
   // TODO: Add errors!
 
   describe("Successfully convert size across brands", () => {
@@ -127,6 +132,13 @@ describe("src/index.ts", () => {
     test("should return 6.5", () => {
       result = "6.5";
       expect(convert(genderAndBrandAndSystem)).toStrictEqual(result);
+    });
+  });
+
+  describe("Successfully handle system 'jp' as 'cm'", () => {
+    test("should return 30", () => {
+      result = "30";
+      expect(convert(jpToCm)).toStrictEqual(result);
     });
   });
 });

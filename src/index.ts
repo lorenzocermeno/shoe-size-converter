@@ -1,4 +1,4 @@
-import { CM_SYSTEM } from "./constants/constants";
+import { System } from "./constants/constants";
 import { IConvert, IConvertFrom, IConvertTo } from "./interface/interface";
 import { data } from "./data/data";
 import {
@@ -33,7 +33,7 @@ function getDesiredSize(
   cmSize: string
 ): string {
   const isMan = isGenderMan(conversionParameters.gender);
-  const cmSizes = getSizes(data, conversionParameters.brand, CM_SYSTEM, isMan);
+  const cmSizes = getSizes(data, conversionParameters.brand, System.cm, isMan);
 
   const foundIndex = cmSizes.findIndex((s: string) => s === cmSize);
   if (foundIndex === -1) {
@@ -78,7 +78,7 @@ function getCmSize(conversionParameters: IConvertFrom): string {
     isMan
   );
 
-  const cmSizes = getSizes(data, conversionParameters.brand, CM_SYSTEM, isMan);
+  const cmSizes = getSizes(data, conversionParameters.brand, System.cm, isMan);
   const index = sizes.findIndex((s: string) => s === conversionParameters.size);
 
   return cmSizes[index];
@@ -144,10 +144,14 @@ function validateSystem(brand: string, system: string): string {
     throw new Error(`System cannot be empty`);
   }
 
-  const lowerCaseSystem = system?.toLowerCase();
+  let lowerCaseSystem = system?.toLowerCase();
 
   if (!isTypeValid(lowerCaseSystem)) {
     throw new Error(`The system '${lowerCaseSystem}' is not a string`);
+  }
+
+  if (system === System.jp) {
+    lowerCaseSystem = System.cm;
   }
 
   if (data?.[brand]?.[lowerCaseSystem] == null) {
