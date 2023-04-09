@@ -1,0 +1,38 @@
+{
+  "name": "shoe-converter",
+  "version": "0.1.1",
+  "description": "Making it possible to convert the shoe size and gender of one brand to another",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lorenzocermeno/shoe-converter.git"
+  },
+  "author": "Lorenzo Cermeno",
+  "files": [
+    "lib/**/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.3"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --config jestconfig.json"
+  },
+  "bugs": {
+    "url": "https://github.com/lorenzocermeno/shoe-converter/issues"
+  },
+  "homepage": "https://github.com/lorenzocermeno/shoe-converter#readme",
+  "keywords": [
+    "shoe",
+    "brand",
+    "size",
+    "converter"
+  ],
+  "license": "MIT"
+}
