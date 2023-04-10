@@ -39,4 +39,4 @@ const result = convert({
 
 ## Behind the scenes
 
-The provided size is converted to its length in centimeters, as provided by it's maker.<br>That length is later used as reference to provide the equivalent size of the desired sizing system.
+The provided size is converted to its length in centimeters, as provided by it's maker.<br>That length is later used as reference to provide the equivalent size of a desired brand, sizing system, and/or gender.
