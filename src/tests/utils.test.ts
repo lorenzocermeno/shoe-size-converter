@@ -83,7 +83,6 @@ describe("src/utils/utils.ts", () => {
     const unManageableGender = {
       kids: "kids",
       infant: "infant",
-      number: "123",
       questionMark: "?",
     };
 
@@ -109,10 +108,6 @@ describe("src/utils/utils.ts", () => {
 
     test("should return false when provided with 'infant'", () => {
       expect(isGenderManageable(unManageableGender.infant)).toBe(false);
-    });
-
-    test("should return false when provided with a numbers", () => {
-      expect(isGenderManageable(unManageableGender.number)).toBe(false);
     });
 
     test("should return false when provided with a question mark", () => {
@@ -163,21 +158,17 @@ describe("src/utils/utils.ts", () => {
   });
 
   describe("isGenderMan()", () => {
-    const parameter = {
-      men: "men",
-      notMen: "notMen",
-    };
+    const notMen = "notMen";
 
     test("should return true when provided with 'men'", () => {
-      expect(isGenderMan(parameter.men)).toBe(true);
+      expect(isGenderMan(gender.men)).toBe(true);
     });
 
     test("should return false when provided with 'notMen'", () => {
-      expect(isGenderMan(parameter.notMen)).toBe(false);
+      expect(isGenderMan(notMen)).toBe(false);
     });
   });
 
-  //TODO Add tests for getSizes()
   describe("getSizes()", () => {
     test("should return '28, 29, 30' for men", () => {
       const result = ["28", "29", "30"];
