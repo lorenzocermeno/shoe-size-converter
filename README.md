@@ -21,7 +21,7 @@ const result = convert({
     size: "8",
   },
   to: {
-    brand: "nike",
+    brand: "adidas",
     system: "uk",
     gender: "men",
   },
@@ -30,12 +30,12 @@ const result = convert({
 
 ## Service
 
-| **Parameter** | **Type** | **Description**                                                             |
-| ------------- | -------- | --------------------------------------------------------------------------- |
-| `brand`       | `string` | The brand of the shoe (e.g., Nike, Adidas)                                  |
-| `system`      | `string` | The sizing system (e.g., eu, jp, uk, us)                                    |
-| `gender`      | `string` | The gender, as provided by the shoe makers (e.g., men, women, male, female) |
-| `size`        | `string` | The size of the shoe (e.g., 41 1/3, 8, 10.5)                                |
+| **Parameter** | **Type** | **Description**                            |
+| ------------- | -------- | ------------------------------------------ |
+| `brand`       | `string` | The brand of the shoe                      |
+| `system`      | `string` | The sizing system                          |
+| `gender`      | `string` | The gender, as provided by the shoe makers |
+| `size`        | `string` | The size of the shoe                       |
 
 ## Behind the scenes
 
