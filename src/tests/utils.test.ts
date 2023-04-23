@@ -13,12 +13,23 @@ import {
 describe("src/utils/utils.ts", () => {
   const mockData: IData = {
     nike: {
-      cm: {
-        men: ["28", "29", "30"],
-        women: ["20", "21", "22"],
+      men: {
+        cm: {
+          men: ["28", "29", "30"],
+          women: ["20", "21", "22"],
+        },
+      },
+      women: {
+        cm: {
+          men: ["28", "29", "30"],
+          women: ["20", "21", "22"],
+        },
       },
     },
   };
+
+  const mockBrand: string = "nike";
+  const mockSystem: string = "cm";
 
   const gender = {
     men: "men",
@@ -135,25 +146,19 @@ describe("src/utils/utils.ts", () => {
 
   describe("isGenderAvailable()", () => {
     test("should return true when provided with 'men'", () => {
-      expect(isGenderAvailable(mockData, "nike", "cm", gender.men)).toBe(true);
+      expect(isGenderAvailable(mockData, mockBrand, gender.men)).toBe(true);
     });
 
     test("should return true when provided with 'women'", () => {
-      expect(isGenderAvailable(mockData, "nike", "cm", gender.women)).toBe(
-        true
-      );
+      expect(isGenderAvailable(mockData, mockBrand, gender.women)).toBe(true);
     });
 
     test("should return false when provided with 'female'", () => {
-      expect(isGenderAvailable(mockData, "nike", "cm", gender.female)).toBe(
-        false
-      );
+      expect(isGenderAvailable(mockData, mockBrand, gender.female)).toBe(false);
     });
 
     test("should return false when provided with 'male'", () => {
-      expect(isGenderAvailable(mockData, "nike", "cm", gender.male)).toBe(
-        false
-      );
+      expect(isGenderAvailable(mockData, mockBrand, gender.male)).toBe(false);
     });
   });
 
@@ -171,13 +176,19 @@ describe("src/utils/utils.ts", () => {
 
   describe("getSizes()", () => {
     test("should return '28, 29, 30' for men", () => {
+      const isMan: boolean = true;
       const result = ["28", "29", "30"];
-      expect(getSizes(mockData, "nike", "cm", true)).toStrictEqual(result);
+      expect(
+        getSizes(mockData, mockBrand, gender.men, mockSystem, isMan)
+      ).toStrictEqual(result);
     });
 
-    test("should return '21, 22, 23' for men", () => {
+    test("should return '20, 21, 22'", () => {
+      const isMan: boolean = false;
       const result = ["20", "21", "22"];
-      expect(getSizes(mockData, "nike", "cm", false)).toStrictEqual(result);
+      expect(
+        getSizes(mockData, mockBrand, gender.women, mockSystem, isMan)
+      ).toStrictEqual(result);
     });
   });
 });
