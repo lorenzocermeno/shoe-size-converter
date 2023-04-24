@@ -32,10 +32,9 @@ function convertGenderSynonym(gender: string): string {
 function isGenderAvailable(
   data: IData,
   brand: string,
-  system: string,
   gender: string
 ): boolean {
-  return gender in data[brand][system];
+  return gender in data[brand];
 }
 
 function isGenderMan(gender: string): boolean {
@@ -45,13 +44,14 @@ function isGenderMan(gender: string): boolean {
 function getSizes(
   data: IData,
   brand: string,
+  gender: string,
   system: string,
   isMan: boolean
 ): any {
   if (isMan) {
-    return data[brand][system][Gender.Men];
+    return data[brand][gender][system][Gender.Men];
   }
-  return data[brand][system][Gender.Women];
+  return data[brand][gender][system][Gender.Women];
 }
 
 export {

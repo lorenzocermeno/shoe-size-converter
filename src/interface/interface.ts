@@ -1,23 +1,25 @@
 interface IData {
   [brand: string]: {
-    [system: string]: {
-      men: string[];
-      women: string[];
+    [gender: string]: {
+      [system: string]: {
+        men: string[];
+        women: string[];
+      };
     };
   };
 }
 
 interface IConvertFrom {
   brand: string;
-  system: string;
   gender: string;
+  system: string;
   size: string;
 }
 
 interface IConvertTo {
   brand: string;
-  system: string;
   gender: string;
+  system: string;
 }
 
 interface IConvert {

@@ -33,7 +33,13 @@ function getDesiredSize(
   cmSize: string
 ): string {
   const isMan = isGenderMan(conversionParameters.gender);
-  const cmSizes = getSizes(data, conversionParameters.brand, System.cm, isMan);
+  const cmSizes = getSizes(
+    data,
+    conversionParameters.brand,
+    conversionParameters.gender,
+    System.cm,
+    isMan
+  );
 
   const foundIndex = cmSizes.findIndex((s: string) => s === cmSize);
   if (foundIndex === -1) {
@@ -54,6 +60,7 @@ function getDesiredSize(
   const sizes = getSizes(
     data,
     conversionParameters.brand,
+    conversionParameters.gender,
     conversionParameters.system,
     isMan
   );
@@ -74,11 +81,18 @@ function getCmSize(conversionParameters: IConvertFrom): string {
   const sizes = getSizes(
     data,
     conversionParameters.brand,
+    conversionParameters.gender,
     conversionParameters.system,
     isMan
   );
 
-  const cmSizes = getSizes(data, conversionParameters.brand, System.cm, isMan);
+  const cmSizes = getSizes(
+    data,
+    conversionParameters.brand,
+    conversionParameters.gender,
+    System.cm,
+    isMan
+  );
   const index = sizes.findIndex((s: string) => s === conversionParameters.size);
 
   return cmSizes[index];
@@ -106,7 +120,7 @@ function validateSize(
     );
   }
 
-  const sizes = getSizes(data, brand, system, isMan);
+  const sizes = getSizes(data, brand, gender, system, isMan);
 
   if (!sizes.some((s: string) => s === size)) {
     throw new Error(`The size '${size}' is not available in ${system}`);
@@ -139,7 +153,7 @@ function validateBrand(brand: string): string {
   return lowerCaseBrand;
 }
 
-function validateSystem(brand: string, system: string): string {
+function validateSystem(brand: string, gender: string, system: string): string {
   if (!system) {
     throw new Error(`System cannot be empty`);
   }
@@ -154,7 +168,7 @@ function validateSystem(brand: string, system: string): string {
     lowerCaseSystem = System.cm;
   }
 
-  if (data?.[brand]?.[lowerCaseSystem] == null) {
+  if (data?.[brand]?.[gender]?.[lowerCaseSystem] == null) {
     throw new Error(
       `The system '${lowerCaseSystem}' is not available for the brand '${capitalizeFirstLetter(
         brand
@@ -165,7 +179,7 @@ function validateSystem(brand: string, system: string): string {
   return lowerCaseSystem;
 }
 
-function validateGender(brand: string, system: string, gender: string): string {
+function validateGender(brand: string, gender: string): string {
   if (!gender) {
     throw new Error(`Gender cannot be empty`);
   }
@@ -184,9 +198,9 @@ function validateGender(brand: string, system: string, gender: string): string {
     );
   }
 
-  if (!isGenderAvailable(data, brand, system, manageableGender)) {
+  if (!isGenderAvailable(data, brand, manageableGender)) {
     throw new Error(
-      `The gender '${manageableGender}' is not available for ${system} sizes by ${capitalizeFirstLetter(
+      `The gender '${manageableGender}' is not available for ${capitalizeFirstLetter(
         brand
       )}`
     );
@@ -197,27 +211,27 @@ function validateGender(brand: string, system: string, gender: string): string {
 
 function getPropertiesToConvertFrom(convertFrom: IConvertFrom): IConvertFrom {
   const brand = validateBrand(convertFrom.brand);
-  const system = validateSystem(brand, convertFrom.system);
-  const gender = validateGender(brand, system, convertFrom.gender);
+  const gender = validateGender(brand, convertFrom.gender);
+  const system = validateSystem(brand, gender, convertFrom.system);
   const convertFromSize = validateSize(brand, system, gender, convertFrom.size);
 
   return {
     brand: brand,
-    system: system,
     gender: gender,
+    system: system,
     size: convertFromSize,
   };
 }
 
 function getPropertiesToConvertTo(convertTo: IConvertTo): IConvertTo {
   const brand = validateBrand(convertTo.brand);
-  const system = validateSystem(brand, convertTo.system);
-  const gender = validateGender(brand, system, convertTo.gender);
+  const gender = validateGender(brand, convertTo.gender);
+  const system = validateSystem(brand, gender, convertTo.system);
 
   return {
     brand: brand,
-    system: system,
     gender: gender,
+    system: system,
   };
 }
 
@@ -232,3 +246,19 @@ function getShoeSizeData(): string {
 }
 
 export { convert, getShoeSizeData };
+
+// console.log(
+//   convert({
+//     from: {
+//       brand: "nike",
+//       gender: "men",
+//       system: "cm",
+//       size: "7",
+//     },
+//     to: {
+//       brand: "adidas",
+//       gender: "men",
+//       system: "eu",
+//     },
+//   })
+// );
