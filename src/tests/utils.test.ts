@@ -1,13 +1,13 @@
+import { Gender, System } from "../constants/constants";
 import { IData } from "../interface/interface";
 import {
-  convertGenderSynonym,
-  isGenderMan,
-  isGenderManageable,
-  isSizeFormatValid,
-  isTypeValid,
-  capitalizeFirstLetter,
-  isGenderAvailable,
-  getSizes,
+  getAvailableBrands,
+  getAvailableConvertionSizes,
+  getAvailableGenders,
+  getAvailableSizes,
+  getAvailableSystems,
+  getGender,
+  getSystem,
 } from "../utils/utils";
 
 describe("src/utils/utils.ts", () => {
@@ -18,177 +18,113 @@ describe("src/utils/utils.ts", () => {
           men: ["28", "29", "30"],
           women: ["20", "21", "22"],
         },
+        eu: {
+          men: [],
+          women: [],
+        },
+        uk: {
+          men: [],
+          women: [],
+        },
+        us: {
+          men: [],
+          women: [],
+        },
       },
       women: {
         cm: {
           men: ["28", "29", "30"],
           women: ["20", "21", "22"],
         },
+        eu: {
+          men: [],
+          women: [],
+        },
+        uk: {
+          men: [],
+          women: [],
+        },
+        us: {
+          men: [],
+          women: [],
+        },
       },
     },
   };
 
   const mockBrand: string = "nike";
-  const mockSystem: string = "cm";
+  const mockSystem: System = System.Cm;
 
-  const gender = {
-    men: "men",
-    women: "women",
-    male: "male",
-    female: "female",
-  };
-
-  describe("should capitalize first letter()", () => {
-    test("should return the string with the first letter capitalized", () => {
-      const string = "asd";
-      const result = "Asd";
-      expect(capitalizeFirstLetter(string)).toBe(result);
+  describe("getGender()", () => {
+    test("should return enum value of provided gender", () => {
+      const validGender = {
+        men: "men",
+        women: "women",
+      };
+      expect(getGender(validGender.men)).toEqual(validGender.men as Gender);
+      expect(getGender(validGender.women)).toEqual(Gender.Women as Gender);
     });
   });
 
-  describe("isTypeValid()", () => {
-    test("should return true provided a string", () => {
-      const string = "asd";
-      expect(isTypeValid(string)).toBe(true);
+  describe("getSystem()", () => {
+    test("should return enum value of provided system", () => {
+      const validSystem = {
+        cm: "cm",
+        eu: "eu",
+        uk: "uk",
+        us: "us",
+      };
+      expect(getSystem(validSystem.cm)).toEqual(validSystem.cm as Gender);
+      expect(getSystem(validSystem.eu)).toEqual(validSystem.eu as Gender);
+      expect(getSystem(validSystem.uk)).toEqual(validSystem.uk as Gender);
+      expect(getSystem(validSystem.us)).toEqual(validSystem.us as Gender);
     });
   });
 
-  describe("isSizeFormatValid()", () => {
-    const validShoeSizes = {
-      wholeNumber: "10",
-      thirds: "42 2/3",
-      decimals: "8.5",
-    };
-    const invalidShoeSizes = {
-      longNumber: "101",
-      letters: "asd",
-      emptyString: "",
-    };
-
-    test("should return true provided with a whole number", () => {
-      expect(isSizeFormatValid(validShoeSizes.wholeNumber)).toBe(true);
-    });
-
-    test("should return true provided with a number of thirds", () => {
-      expect(isSizeFormatValid(validShoeSizes.thirds)).toBe(true);
-    });
-
-    test("should return true provided with a number with decimals", () => {
-      expect(isSizeFormatValid(validShoeSizes.decimals)).toBe(true);
-    });
-
-    test("should return false provided with a number > 100", () => {
-      expect(isSizeFormatValid(invalidShoeSizes.longNumber)).toBe(false);
-    });
-
-    test("should return false provided with letters", () => {
-      expect(isSizeFormatValid(invalidShoeSizes.letters)).toBe(false);
-    });
-
-    test("should return false provided with an empty string", () => {
-      expect(isSizeFormatValid(invalidShoeSizes.emptyString)).toBe(false);
+  describe("getAvailableBrands()", () => {
+    test("should return an array of strings", () => {
+      const result = ["nike"];
+      expect(getAvailableBrands(mockData)).toEqual(result);
     });
   });
 
-  describe("isGenderManageable()", () => {
-    const unManageableGender = {
-      kids: "kids",
-      infant: "infant",
-      questionMark: "?",
-    };
-
-    test("should return true when provided with 'men'", () => {
-      expect(isGenderManageable(gender.men)).toBe(true);
-    });
-
-    test("should return true when provided with 'women'", () => {
-      expect(isGenderManageable(gender.women)).toBe(true);
-    });
-
-    test("should return true when provided with 'male'", () => {
-      expect(isGenderManageable(gender.male)).toBe(true);
-    });
-
-    test("should return true when provided with 'female'", () => {
-      expect(isGenderManageable(gender.female)).toBe(true);
-    });
-
-    test("should return false when provided with 'kids'", () => {
-      expect(isGenderManageable(unManageableGender.kids)).toBe(false);
-    });
-
-    test("should return false when provided with 'infant'", () => {
-      expect(isGenderManageable(unManageableGender.infant)).toBe(false);
-    });
-
-    test("should return false when provided with a question mark", () => {
-      expect(isGenderManageable(unManageableGender.questionMark)).toBe(false);
+  describe("getAvailableGenders()", () => {
+    test("should return an array of strings", () => {
+      const result = ["men", "women"];
+      expect(getAvailableGenders(mockData, mockBrand)).toEqual(result);
     });
   });
 
-  describe("convertGenderSynonym()", () => {
-    test("should return 'men' when provided with 'men'", () => {
-      expect(convertGenderSynonym(gender.men)).toStrictEqual(gender.men);
-    });
-
-    test("should return 'women' when provided with 'women'", () => {
-      expect(convertGenderSynonym(gender.women)).toStrictEqual(gender.women);
-    });
-
-    test("should return 'men' when provided with 'male'", () => {
-      expect(convertGenderSynonym(gender.male)).toStrictEqual(gender.men);
-    });
-
-    test("should return 'women' when provided with 'female'", () => {
-      expect(convertGenderSynonym(gender.female)).toStrictEqual(gender.women);
+  describe("getAvailableSystems()", () => {
+    test("should return an array of strings", () => {
+      const result = ["cm", "eu", "uk", "us"];
+      expect(getAvailableSystems(mockData, mockBrand, Gender.Men)).toEqual(
+        result
+      );
     });
   });
 
-  describe("isGenderAvailable()", () => {
-    test("should return true when provided with 'men'", () => {
-      expect(isGenderAvailable(mockData, mockBrand, gender.men)).toBe(true);
-    });
-
-    test("should return true when provided with 'women'", () => {
-      expect(isGenderAvailable(mockData, mockBrand, gender.women)).toBe(true);
-    });
-
-    test("should return false when provided with 'female'", () => {
-      expect(isGenderAvailable(mockData, mockBrand, gender.female)).toBe(false);
-    });
-
-    test("should return false when provided with 'male'", () => {
-      expect(isGenderAvailable(mockData, mockBrand, gender.male)).toBe(false);
-    });
-  });
-
-  describe("isGenderMan()", () => {
-    const notMen = "notMen";
-
-    test("should return true when provided with 'men'", () => {
-      expect(isGenderMan(gender.men)).toBe(true);
-    });
-
-    test("should return false when provided with 'notMen'", () => {
-      expect(isGenderMan(notMen)).toBe(false);
-    });
-  });
-
-  describe("getSizes()", () => {
-    test("should return '28, 29, 30' for men", () => {
-      const isMan: boolean = true;
-      const result = ["28", "29", "30"];
+  describe("getAvailableSizes()", () => {
+    test("should return an array of strings", () => {
+      const result = mockData.nike.men.cm.men;
       expect(
-        getSizes(mockData, mockBrand, gender.men, mockSystem, isMan)
-      ).toStrictEqual(result);
+        getAvailableSizes(mockData, mockBrand, Gender.Men, mockSystem)
+      ).toEqual(result);
     });
+  });
 
-    test("should return '20, 21, 22'", () => {
-      const isMan: boolean = false;
-      const result = ["20", "21", "22"];
+  describe("getAvailableConvertionSizes()", () => {
+    test("should return an array of strings", () => {
+      const result = mockData.nike.men.cm.women;
       expect(
-        getSizes(mockData, mockBrand, gender.women, mockSystem, isMan)
-      ).toStrictEqual(result);
+        getAvailableConvertionSizes(
+          mockData,
+          mockBrand,
+          Gender.Men,
+          Gender.Women,
+          mockSystem
+        )
+      ).toEqual(result);
     });
   });
 });

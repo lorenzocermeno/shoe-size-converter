@@ -1,7 +1,39 @@
+import { Gender, System } from "../constants/constants";
+
 interface IData {
   [brand: string]: {
-    [gender: string]: {
-      [system: string]: {
+    men: {
+      cm: {
+        men: string[];
+        women: string[];
+      };
+      eu: {
+        men: string[];
+        women: string[];
+      };
+      uk: {
+        men: string[];
+        women: string[];
+      };
+      us: {
+        men: string[];
+        women: string[];
+      };
+    };
+    women: {
+      cm: {
+        men: string[];
+        women: string[];
+      };
+      eu: {
+        men: string[];
+        women: string[];
+      };
+      uk: {
+        men: string[];
+        women: string[];
+      };
+      us: {
         men: string[];
         women: string[];
       };
@@ -11,15 +43,15 @@ interface IData {
 
 interface IConvertFrom {
   brand: string;
-  gender: string;
-  system: string;
+  gender: Gender;
+  system: System;
   size: string;
 }
 
 interface IConvertTo {
   brand: string;
-  gender: string;
-  system: string;
+  gender: Gender;
+  system: System;
 }
 
 interface IConvert {

@@ -1,66 +1,61 @@
-import { Gender } from "../constants/constants";
 import { IData } from "../interface/interface";
+import { Gender, System } from "../constants/constants";
 
-function capitalizeFirstLetter(string: string): string {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-function isTypeValid(parameter: unknown): parameter is string {
-  return typeof parameter === "string";
-}
-
-function isSizeFormatValid(size: string): boolean {
-  const regex = /^(?:\d{1,2}(?:\s\d\/\d)?|\d+\.\d+)$/;
-  return regex.test(size);
-}
-
-function isGenderManageable(providedGender: string): providedGender is Gender {
-  return Object.values(Gender).includes(providedGender as Gender);
-}
-
-function convertGenderSynonym(gender: string): string {
-  if (gender === Gender.Male) {
-    return Gender.Men;
+function getGender(gender: string): Gender {
+  if (!Object.values(Gender).includes(gender as Gender)) {
+    throw new Error(`The gender '${gender}' is not available`);
   }
-
-  if (gender === Gender.Female) {
-    return Gender.Women;
-  }
-  return gender;
+  return gender as Gender;
 }
 
-function isGenderAvailable(
+function getSystem(system: string): System {
+  if (!Object.values(System).includes(system as System)) {
+    throw new Error(`The system '${system}' is not available`);
+  }
+  return system as System;
+}
+
+function getAvailableBrands(data: IData): string[] {
+  return Object.keys(data);
+}
+
+function getAvailableGenders(data: IData, brand: string): string[] {
+  return Object.keys(data[brand]);
+}
+
+function getAvailableSystems(
   data: IData,
   brand: string,
-  gender: string
-): boolean {
-  return gender in data[brand];
+  gender: Gender
+): string[] {
+  return Object.keys(data[brand][gender]);
 }
 
-function isGenderMan(gender: string): boolean {
-  return gender === Gender.Men;
-}
-
-function getSizes(
+function getAvailableSizes(
   data: IData,
   brand: string,
-  gender: string,
-  system: string,
-  isMan: boolean
-): any {
-  if (isMan) {
-    return data[brand][gender][system][Gender.Men];
-  }
-  return data[brand][gender][system][Gender.Women];
+  gender: Gender,
+  system: System
+): string[] {
+  return Object.values(data[brand][gender][system][gender]);
+}
+
+function getAvailableConvertionSizes(
+  data: IData,
+  brand: string,
+  fromGender: Gender,
+  gender: Gender,
+  system: System
+): string[] {
+  return Object.values(data[brand][fromGender][system][gender]);
 }
 
 export {
-  capitalizeFirstLetter,
-  isTypeValid,
-  isSizeFormatValid,
-  isGenderManageable,
-  convertGenderSynonym,
-  isGenderAvailable,
-  isGenderMan,
-  getSizes,
+  getGender,
+  getSystem,
+  getAvailableBrands,
+  getAvailableGenders,
+  getAvailableSystems,
+  getAvailableSizes,
+  getAvailableConvertionSizes,
 };

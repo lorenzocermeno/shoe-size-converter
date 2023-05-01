@@ -1,42 +1,47 @@
-import { convert } from "../index";
-import { IConvert, IConvertFrom, IConvertTo } from "../interface/interface";
+import { Gender, System } from "../constants/constants";
+import { convert, getShoeSizeData } from "../index";
+import {
+  IConvert,
+  IConvertFrom,
+  IConvertTo,
+  IData,
+} from "../interface/interface";
+import * as sizingData from "../data/data.json";
 
 describe("src/index.ts", () => {
   let result: string;
 
   function convertFrom(
     brand: string,
-    system: string,
-    gender: string,
+    gender: Gender,
+    system: System,
     size: string
   ): IConvertFrom {
     return {
       brand: brand,
-      system: system,
       gender: gender,
+      system: system,
       size: size,
     };
   }
 
   function convertTo(
     brand: string,
-    system: string,
-    gender: string
+    gender: Gender,
+    system: System
   ): IConvertTo {
     return {
       brand: brand,
-      system: system,
       gender: gender,
+      system: system,
     };
   }
-
-  // TODO: Add errors?
 
   describe("Successfully convert size across brands", () => {
     test("should return 44 2/3", () => {
       const brand: IConvert = {
-        from: convertFrom("nike", "eu", "men", "43"),
-        to: convertTo("adidas", "eu", "men"),
+        from: convertFrom("nike", Gender.Men, System.Eu, "43"),
+        to: convertTo("adidas", Gender.Men, System.Eu),
       };
 
       result = "44 2/3";
@@ -47,8 +52,8 @@ describe("src/index.ts", () => {
   describe("Successfully convert system", () => {
     test("should return 11", () => {
       const system: IConvert = {
-        from: convertFrom("nike", "eu", "men", "45"),
-        to: convertTo("nike", "us", "men"),
+        from: convertFrom("nike", Gender.Men, System.Eu, "45"),
+        to: convertTo("nike", Gender.Men, System.Us),
       };
 
       result = "11";
@@ -59,8 +64,8 @@ describe("src/index.ts", () => {
   describe("Successfully convert size across brands and system", () => {
     test("should return 42", () => {
       const brandAndSystem: IConvert = {
-        from: convertFrom("adidas", "us", "men", "9"),
-        to: convertTo("nike", "eu", "men"),
+        from: convertFrom("adidas", Gender.Men, System.Us, "9"),
+        to: convertTo("nike", Gender.Men, System.Eu),
       };
 
       result = "42";
@@ -69,37 +74,37 @@ describe("src/index.ts", () => {
   });
 
   describe("Successfully convert size across genders", () => {
-    test("should return 10.5", () => {
+    test("should return 10", () => {
       const gender: IConvert = {
-        from: convertFrom("nike", "us", "women", "11.5"),
-        to: convertTo("nike", "us", "men"),
+        from: convertFrom("nike", Gender.Women, System.Us, "11.5"),
+        to: convertTo("nike", Gender.Men, System.Us),
       };
 
-      result = "10.5";
+      result = "10";
       expect(convert(gender)).toStrictEqual(result);
     });
   });
 
   describe("Successfully convert size across genders and systems", () => {
-    test("should return 8.5", () => {
+    test("should return 8", () => {
       const genderAndSystem: IConvert = {
-        from: convertFrom("nike", "eu", "women", "41"),
-        to: convertTo("nike", "us", "men"),
+        from: convertFrom("nike", Gender.Women, System.Eu, "41"),
+        to: convertTo("nike", Gender.Men, System.Us),
       };
 
-      result = "8.5";
+      result = "8";
       expect(convert(genderAndSystem)).toStrictEqual(result);
     });
   });
 
   describe("Successfully convert size across genders and brands", () => {
-    test("should return 8.5", () => {
+    test("should return 9", () => {
       const genderAndBrand: IConvert = {
-        from: convertFrom("adidas", "us", "men", "8"),
-        to: convertTo("nike", "us", "women"),
+        from: convertFrom("adidas", Gender.Men, System.Us, "8"),
+        to: convertTo("nike", Gender.Women, System.Us),
       };
 
-      result = "8.5";
+      result = "9";
       expect(convert(genderAndBrand)).toStrictEqual(result);
     });
   });
@@ -107,8 +112,8 @@ describe("src/index.ts", () => {
   describe("Successfully convert size across genders, brands and system", () => {
     test("should return 6.5", () => {
       const genderAndBrandAndSystem: IConvert = {
-        from: convertFrom("nike", "uk", "men", "4"),
-        to: convertTo("adidas", "us", "women"),
+        from: convertFrom("nike", Gender.Men, System.Uk, "4"),
+        to: convertTo("adidas", Gender.Women, System.Us),
       };
 
       result = "6.5";
@@ -116,15 +121,11 @@ describe("src/index.ts", () => {
     });
   });
 
-  describe("Successfully handle system 'jp' as 'cm'", () => {
-    test("should return 30", () => {
-      const jpToCm: IConvert = {
-        from: convertFrom("nike", "jp", "men", "30"),
-        to: convertTo("nike", "cm", "women"),
-      };
-
-      result = "30";
-      expect(convert(jpToCm)).toStrictEqual(result);
+  describe("getShoeSizeData()", () => {
+    test("should return the shoe size data", () => {
+      const data: IData = sizingData;
+      const result = data;
+      expect(getShoeSizeData()).toStrictEqual(result);
     });
   });
 });

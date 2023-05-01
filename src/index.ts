@@ -1,16 +1,21 @@
-import { System } from "./constants/constants";
-import { IConvert, IConvertFrom, IConvertTo } from "./interface/interface";
-import { data } from "./data/data";
 import {
-  convertGenderSynonym,
-  isGenderAvailable,
-  isGenderManageable,
-  isSizeFormatValid,
-  isTypeValid,
-  isGenderMan,
-  getSizes,
-  capitalizeFirstLetter,
+  IConvert,
+  IConvertFrom,
+  IConvertTo,
+  IData,
+} from "./interface/interface";
+import * as sizingData from "./data/data.json";
+import { Gender, System } from "./constants/constants";
+import {
+  getAvailableBrands,
+  getAvailableConvertionSizes,
+  getAvailableGenders,
+  getAvailableSizes,
+  getAvailableSystems,
+  getGender,
+  getSystem,
 } from "./utils/utils";
+const data: IData = sizingData;
 
 function findClosestSize(sizes: number[], targetSize: number): number {
   let closestNumber = sizes[0];
@@ -30,15 +35,15 @@ function findClosestSize(sizes: number[], targetSize: number): number {
 
 function getDesiredSize(
   conversionParameters: IConvertTo,
+  fromGender: Gender,
   cmSize: string
 ): string {
-  const isMan = isGenderMan(conversionParameters.gender);
-  const cmSizes = getSizes(
+  const cmSizes = getAvailableConvertionSizes(
     data,
     conversionParameters.brand,
+    fromGender,
     conversionParameters.gender,
-    System.cm,
-    isMan
+    System.Cm
   );
 
   const foundIndex = cmSizes.findIndex((s: string) => s === cmSize);
@@ -52,24 +57,21 @@ function getDesiredSize(
   const index = cmSizes.findIndex((s: string) => s === cmSize);
   if (index < 0) {
     throw new Error(
-      `The size is not available for ${
-        conversionParameters.gender
-      } at ${capitalizeFirstLetter(conversionParameters.brand)}`
+      `The size is not available for ${conversionParameters.gender} at ${conversionParameters.brand}`
     );
   }
-  const sizes = getSizes(
+
+  const sizes = getAvailableConvertionSizes(
     data,
     conversionParameters.brand,
+    fromGender,
     conversionParameters.gender,
-    conversionParameters.system,
-    isMan
+    conversionParameters.system
   );
 
   if (!sizes[index]) {
     throw new Error(
-      `The size is not available for ${
-        conversionParameters.gender
-      } at ${capitalizeFirstLetter(conversionParameters.brand)}`
+      `The size is not available for ${conversionParameters.gender} at ${conversionParameters.brand}`
     );
   }
 
@@ -77,22 +79,20 @@ function getDesiredSize(
 }
 
 function getCmSize(conversionParameters: IConvertFrom): string {
-  const isMan = isGenderMan(conversionParameters.gender);
-  const sizes = getSizes(
+  const sizes = getAvailableSizes(
     data,
     conversionParameters.brand,
     conversionParameters.gender,
-    conversionParameters.system,
-    isMan
+    conversionParameters.system
   );
 
-  const cmSizes = getSizes(
+  const cmSizes = getAvailableSizes(
     data,
     conversionParameters.brand,
     conversionParameters.gender,
-    System.cm,
-    isMan
+    System.Cm
   );
+
   const index = sizes.findIndex((s: string) => s === conversionParameters.size);
 
   return cmSizes[index];
@@ -100,30 +100,16 @@ function getCmSize(conversionParameters: IConvertFrom): string {
 
 function validateSize(
   brand: string,
-  system: string,
-  gender: string,
+  gender: Gender,
+  system: System,
   size: string
 ): string {
   if (!size) {
     throw new Error(`Size cannot be empty`);
   }
 
-  const isMan = isGenderMan(gender);
-
-  if (!isTypeValid(size)) {
-    throw new Error(`The size '${size}' is not a string`);
-  }
-
-  if (!isSizeFormatValid(size)) {
-    throw new Error(
-      `The size '${size}' does not comply with the regex:\n^(?:\d{1,2}(?:\s\d\/\d)?|\d+\.\d+)$`
-    );
-  }
-
-  const sizes = getSizes(data, brand, gender, system, isMan);
-
-  if (!sizes.some((s: string) => s === size)) {
-    throw new Error(`The size '${size}' is not available in ${system}`);
+  if (!getAvailableSizes(data, brand, gender, system).includes(size)) {
+    throw new Error(`The size '${size}' is not available`);
   }
 
   return size;
@@ -134,86 +120,42 @@ function validateBrand(brand: string): string {
     throw new Error(`Brand cannot be empty`);
   }
 
-  const lowerCaseBrand = brand.toLowerCase();
-
-  if (!isTypeValid(lowerCaseBrand)) {
-    throw new Error(
-      `The brand '${capitalizeFirstLetter(lowerCaseBrand)}' is not a string`
-    );
+  if (!getAvailableBrands(data).includes(brand)) {
+    throw new Error(`The brand '${brand}' is not available`);
   }
-
-  if (data?.[lowerCaseBrand] == null) {
-    throw new Error(
-      `There is no data available for '${capitalizeFirstLetter(
-        lowerCaseBrand
-      )}'`
-    );
-  }
-
-  return lowerCaseBrand;
+  return brand;
 }
 
-function validateSystem(brand: string, gender: string, system: string): string {
-  if (!system) {
-    throw new Error(`System cannot be empty`);
-  }
-
-  let lowerCaseSystem = system?.toLowerCase();
-
-  if (!isTypeValid(lowerCaseSystem)) {
-    throw new Error(`The system '${lowerCaseSystem}' is not a string`);
-  }
-
-  if (system === System.jp) {
-    lowerCaseSystem = System.cm;
-  }
-
-  if (data?.[brand]?.[gender]?.[lowerCaseSystem] == null) {
-    throw new Error(
-      `The system '${lowerCaseSystem}' is not available for the brand '${capitalizeFirstLetter(
-        brand
-      )}'`
-    );
-  }
-
-  return lowerCaseSystem;
-}
-
-function validateGender(brand: string, gender: string): string {
+function validateGender(brand: string, gender: string): Gender {
   if (!gender) {
     throw new Error(`Gender cannot be empty`);
   }
 
-  const lowerCaseGender = gender.toLowerCase();
+  if (!getAvailableGenders(data, brand).includes(gender)) {
+    throw new Error(`The gender '${gender}' is not available`);
+  }
+  return getGender(gender);
+}
 
-  if (!isTypeValid(lowerCaseGender)) {
-    throw new Error(`The gender '${lowerCaseGender}' is not a string`);
+function validateSystem(brand: string, gender: Gender, system: string): System {
+  if (!system) {
+    throw new Error(`System cannot be empty`);
   }
 
-  const manageableGender = convertGenderSynonym(lowerCaseGender);
-
-  if (!isGenderManageable(manageableGender)) {
+  if (!getAvailableSystems(data, brand, gender).includes(system)) {
     throw new Error(
-      `The gender '${manageableGender}' is not a gender used by the available shoe brands`
+      `The system '${system}' is not available for ${gender}'s ${brand}`
     );
   }
 
-  if (!isGenderAvailable(data, brand, manageableGender)) {
-    throw new Error(
-      `The gender '${manageableGender}' is not available for ${capitalizeFirstLetter(
-        brand
-      )}`
-    );
-  }
-
-  return manageableGender;
+  return getSystem(system);
 }
 
 function getPropertiesToConvertFrom(convertFrom: IConvertFrom): IConvertFrom {
   const brand = validateBrand(convertFrom.brand);
-  const gender = validateGender(brand, convertFrom.gender);
-  const system = validateSystem(brand, gender, convertFrom.system);
-  const convertFromSize = validateSize(brand, system, gender, convertFrom.size);
+  const gender: Gender = validateGender(brand, convertFrom.gender);
+  const system: System = validateSystem(brand, gender, convertFrom.system);
+  const convertFromSize = validateSize(brand, gender, system, convertFrom.size);
 
   return {
     brand: brand,
@@ -238,27 +180,31 @@ function getPropertiesToConvertTo(convertTo: IConvertTo): IConvertTo {
 function convert(convert: IConvert): string {
   const cmSize = getCmSize(getPropertiesToConvertFrom(convert.from));
 
-  return getDesiredSize(getPropertiesToConvertTo(convert.to), cmSize);
+  return getDesiredSize(
+    getPropertiesToConvertTo(convert.to),
+    convert.from.gender,
+    cmSize
+  );
 }
 
-function getShoeSizeData(): string {
-  return JSON.stringify(data);
+function getShoeSizeData(): IData {
+  return data;
 }
 
 export { convert, getShoeSizeData };
 
-// console.log(
-//   convert({
-//     from: {
-//       brand: "nike",
-//       gender: "men",
-//       system: "cm",
-//       size: "7",
-//     },
-//     to: {
-//       brand: "adidas",
-//       gender: "men",
-//       system: "eu",
-//     },
-//   })
-// );
+console.log(
+  convert({
+    from: {
+      brand: "nike",
+      gender: Gender.Men,
+      system: System.Eu,
+      size: "43",
+    },
+    to: {
+      brand: "adidas",
+      gender: Gender.Men,
+      system: System.Eu,
+    },
+  })
+);

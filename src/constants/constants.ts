@@ -1,16 +1,13 @@
 enum Gender {
-  Male = "male",
-  Female = "female",
   Men = "men",
   Women = "women",
 }
 
-const System = {
-  cm: "cm",
-  eu: "eu",
-  jp: "jp",
-  uk: "uk",
-  us: "us",
-} as const;
+enum System {
+  Cm = "cm",
+  Eu = "eu",
+  Uk = "uk",
+  Us = "us",
+}
 
 export { Gender, System };
