@@ -19,22 +19,18 @@ interface IData {
   [brand: string]: IGenders;
 }
 
-interface IConvertFrom {
+interface IConvertionParameters {
   brand: string;
   gender: Gender;
   system: System;
   size: string;
 }
 
-interface IConvertTo {
-  brand: string;
-  gender: Gender;
-  system: System;
-}
+type IConvertionResult = Omit<IConvertionParameters, "size">;
 
 interface IConvert {
-  from: IConvertFrom;
-  to: IConvertTo;
+  from: IConvertionParameters;
+  to: IConvertionResult;
 }
 
-export { IData, IConvertFrom, IConvertTo, IConvert };
+export { IData, IConvertionParameters, IConvertionResult, IConvert };

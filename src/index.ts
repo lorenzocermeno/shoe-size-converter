@@ -1,7 +1,7 @@
 import {
   IConvert,
-  IConvertFrom,
-  IConvertTo,
+  IConvertionParameters,
+  IConvertionResult,
   IData,
 } from "./interface/interface";
 import * as sizingData from "./data/data.json";
@@ -20,8 +20,8 @@ const data: IData = sizingData;
 function findClosestSize(sizes: number[], targetSize: number): number {
   let closestNumber = sizes[0];
 
-  for (let i = 0; i < sizes.length; i++) {
-    const currentNumber = sizes[i];
+  for (const size of sizes) {
+    const currentNumber = size;
     const currentDifference = Math.abs(targetSize - currentNumber);
     const closestDifference = Math.abs(targetSize - closestNumber);
 
@@ -34,15 +34,15 @@ function findClosestSize(sizes: number[], targetSize: number): number {
 }
 
 function getDesiredSize(
-  conversionParameters: IConvertTo,
+  desiredConvertionData: IConvertionResult,
   fromGender: Gender,
   cmSize: string
 ): string {
   const cmSizes = getAvailableConvertionSizes(
     data,
-    conversionParameters.brand,
+    desiredConvertionData.brand,
     fromGender,
-    conversionParameters.gender,
+    desiredConvertionData.gender,
     System.Cm
   );
 
@@ -57,28 +57,28 @@ function getDesiredSize(
   const index = cmSizes.findIndex((s: string) => s === cmSize);
   if (index < 0) {
     throw new Error(
-      `The size is not available for ${conversionParameters.gender} at ${conversionParameters.brand}`
+      `The size is not available for ${desiredConvertionData.gender} at ${desiredConvertionData.brand}`
     );
   }
 
   const sizes = getAvailableConvertionSizes(
     data,
-    conversionParameters.brand,
+    desiredConvertionData.brand,
     fromGender,
-    conversionParameters.gender,
-    conversionParameters.system
+    desiredConvertionData.gender,
+    desiredConvertionData.system
   );
 
   if (!sizes[index]) {
     throw new Error(
-      `The size is not available for ${conversionParameters.gender} at ${conversionParameters.brand}`
+      `The size is not available for ${desiredConvertionData.gender} at ${desiredConvertionData.brand}`
     );
   }
 
   return sizes[index];
 }
 
-function getCmSize(conversionParameters: IConvertFrom): string {
+function getCmSize(conversionParameters: IConvertionParameters): string {
   const sizes = getAvailableSizes(
     data,
     conversionParameters.brand,
@@ -151,7 +151,9 @@ function validateSystem(brand: string, gender: Gender, system: string): System {
   return getSystem(system);
 }
 
-function getPropertiesToConvertFrom(convertFrom: IConvertFrom): IConvertFrom {
+function getPropertiesToConvertFrom(
+  convertFrom: IConvertionParameters
+): IConvertionParameters {
   const brand = validateBrand(convertFrom.brand);
   const gender: Gender = validateGender(brand, convertFrom.gender);
   const system: System = validateSystem(brand, gender, convertFrom.system);
@@ -165,7 +167,9 @@ function getPropertiesToConvertFrom(convertFrom: IConvertFrom): IConvertFrom {
   };
 }
 
-function getPropertiesToConvertTo(convertTo: IConvertTo): IConvertTo {
+function getPropertiesToConvertTo(
+  convertTo: IConvertionResult
+): IConvertionResult {
   const brand = validateBrand(convertTo.brand);
   const gender = validateGender(brand, convertTo.gender);
   const system = validateSystem(brand, gender, convertTo.system);
