@@ -2,8 +2,8 @@ import { Gender, System } from "../constants/constants";
 import { convert, getShoeSizeData } from "../index";
 import {
   IConvert,
-  IConvertFrom,
-  IConvertTo,
+  IConvertionParameters,
+  IConvertionResult,
   IData,
 } from "../interface/interface";
 import * as sizingData from "../data/data.json";
@@ -13,7 +13,7 @@ function convertFrom(
   gender: Gender,
   system: System,
   size: string
-): IConvertFrom {
+): IConvertionParameters {
   return {
     brand: brand,
     gender: gender,
@@ -22,7 +22,11 @@ function convertFrom(
   };
 }
 
-function convertTo(brand: string, gender: Gender, system: System): IConvertTo {
+function convertTo(
+  brand: string,
+  gender: Gender,
+  system: System
+): IConvertionResult {
   return {
     brand: brand,
     gender: gender,

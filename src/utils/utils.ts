@@ -1,6 +1,12 @@
 import { IData } from "../interface/interface";
 import { Gender, System } from "../constants/constants";
 
+function throwErrorIfParameterIsEmpty(input: string, parameterType: string) {
+  if (!input) {
+    throw new Error(`${parameterType} cannot be empty`);
+  }
+}
+
 function getGender(gender: string): Gender {
   if (!Object.values(Gender).includes(gender as Gender)) {
     throw new Error(`The gender '${gender}' is not available`);
@@ -51,6 +57,7 @@ function getAvailableConvertionSizes(
 }
 
 export {
+  throwErrorIfParameterIsEmpty,
   getGender,
   getSystem,
   getAvailableBrands,

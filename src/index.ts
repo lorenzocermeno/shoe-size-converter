@@ -14,7 +14,13 @@ import {
   getAvailableSystems,
   getGender,
   getSystem,
+  throwErrorIfParameterIsEmpty,
 } from "./utils/utils";
+
+function isNotAvailable(input: string) {
+  return `'${input}' is not available`;
+}
+
 const data: IData = sizingData;
 
 function findClosestSize(sizes: number[], targetSize: number): number {
@@ -104,47 +110,39 @@ function validateSize(
   system: System,
   size: string
 ): string {
-  if (!size) {
-    throw new Error(`Size cannot be empty`);
-  }
+  throwErrorIfParameterIsEmpty(size, "Size");
 
   if (!getAvailableSizes(data, brand, gender, system).includes(size)) {
-    throw new Error(`The size '${size}' is not available`);
+    throw new Error(`The size ${isNotAvailable(size)}`);
   }
 
   return size;
 }
 
 function validateBrand(brand: string): string {
-  if (!brand) {
-    throw new Error(`Brand cannot be empty`);
-  }
+  throwErrorIfParameterIsEmpty(brand, "Brand");
 
   if (!getAvailableBrands(data).includes(brand)) {
-    throw new Error(`The brand '${brand}' is not available`);
+    throw new Error(`The brand ${isNotAvailable(brand)}`);
   }
   return brand;
 }
 
 function validateGender(brand: string, gender: string): Gender {
-  if (!gender) {
-    throw new Error(`Gender cannot be empty`);
-  }
+  throwErrorIfParameterIsEmpty(gender, "Gender");
 
   if (!getAvailableGenders(data, brand).includes(gender)) {
-    throw new Error(`The gender '${gender}' is not available`);
+    throw new Error(`The gender ${isNotAvailable(gender)}`);
   }
   return getGender(gender);
 }
 
 function validateSystem(brand: string, gender: Gender, system: string): System {
-  if (!system) {
-    throw new Error(`System cannot be empty`);
-  }
+  throwErrorIfParameterIsEmpty(system, "System");
 
   if (!getAvailableSystems(data, brand, gender).includes(system)) {
     throw new Error(
-      `The system '${system}' is not available for ${gender}'s ${brand}`
+      `The system ${isNotAvailable(system)} for ${gender}'s ${brand}`
     );
   }
 
