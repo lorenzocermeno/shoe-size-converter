@@ -1,44 +1,22 @@
 import { Gender, System } from "../constants/constants";
 
+interface IGenders {
+  men: ISystems;
+  women: ISystems;
+}
+interface ISystems {
+  cm: ISizes;
+  eu: ISizes;
+  uk: ISizes;
+  us: ISizes;
+}
+interface ISizes {
+  men: string[];
+  women: string[];
+}
+
 interface IData {
-  [brand: string]: {
-    men: {
-      cm: {
-        men: string[];
-        women: string[];
-      };
-      eu: {
-        men: string[];
-        women: string[];
-      };
-      uk: {
-        men: string[];
-        women: string[];
-      };
-      us: {
-        men: string[];
-        women: string[];
-      };
-    };
-    women: {
-      cm: {
-        men: string[];
-        women: string[];
-      };
-      eu: {
-        men: string[];
-        women: string[];
-      };
-      uk: {
-        men: string[];
-        women: string[];
-      };
-      us: {
-        men: string[];
-        women: string[];
-      };
-    };
-  };
+  [brand: string]: IGenders;
 }
 
 interface IConvertFrom {
