@@ -8,34 +8,30 @@ import {
 } from "../interface/interface";
 import * as sizingData from "../data/data.json";
 
+function convertFrom(
+  brand: string,
+  gender: Gender,
+  system: System,
+  size: string
+): IConvertFrom {
+  return {
+    brand: brand,
+    gender: gender,
+    system: system,
+    size: size,
+  };
+}
+
+function convertTo(brand: string, gender: Gender, system: System): IConvertTo {
+  return {
+    brand: brand,
+    gender: gender,
+    system: system,
+  };
+}
+
 describe("src/index.ts", () => {
   let result: string;
-
-  function convertFrom(
-    brand: string,
-    gender: Gender,
-    system: System,
-    size: string
-  ): IConvertFrom {
-    return {
-      brand: brand,
-      gender: gender,
-      system: system,
-      size: size,
-    };
-  }
-
-  function convertTo(
-    brand: string,
-    gender: Gender,
-    system: System
-  ): IConvertTo {
-    return {
-      brand: brand,
-      gender: gender,
-      system: system,
-    };
-  }
 
   describe("Successfully convert size across brands", () => {
     test("should return 44 2/3", () => {

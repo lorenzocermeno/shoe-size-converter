@@ -10,51 +10,51 @@ import {
   getSystem,
 } from "../utils/utils";
 
-describe("src/utils/utils.ts", () => {
-  const mockData: IData = {
-    nike: {
-      men: {
-        cm: {
-          men: ["28", "29", "30"],
-          women: ["20", "21", "22"],
-        },
-        eu: {
-          men: [],
-          women: [],
-        },
-        uk: {
-          men: [],
-          women: [],
-        },
-        us: {
-          men: [],
-          women: [],
-        },
+const mockData: IData = {
+  nike: {
+    men: {
+      cm: {
+        men: ["28", "29", "30"],
+        women: ["20", "21", "22"],
       },
-      women: {
-        cm: {
-          men: ["28", "29", "30"],
-          women: ["20", "21", "22"],
-        },
-        eu: {
-          men: [],
-          women: [],
-        },
-        uk: {
-          men: [],
-          women: [],
-        },
-        us: {
-          men: [],
-          women: [],
-        },
+      eu: {
+        men: [],
+        women: [],
+      },
+      uk: {
+        men: [],
+        women: [],
+      },
+      us: {
+        men: [],
+        women: [],
       },
     },
-  };
+    women: {
+      cm: {
+        men: ["28", "29", "30"],
+        women: ["20", "21", "22"],
+      },
+      eu: {
+        men: [],
+        women: [],
+      },
+      uk: {
+        men: [],
+        women: [],
+      },
+      us: {
+        men: [],
+        women: [],
+      },
+    },
+  },
+};
 
-  const mockBrand: string = "nike";
-  const mockSystem: System = System.Cm;
+const mockBrand: string = "nike";
+const mockSystem: System = System.Cm;
 
+describe("src/utils/utils.ts", () => {
   describe("getGender()", () => {
     test("should return enum value of provided gender", () => {
       const validGender = {
