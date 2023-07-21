@@ -11,7 +11,7 @@ Making it possible to convert the shoe size and gender of one brand to another.
 ```typescript
 import { convert, getShoeSizeData } from "shoe-converter";
 
-const data = getShoeSizeData(); // Returns data, JSON formatted
+const data = getShoeSizeData(); // Returns the JSON data
 
 const result = convert({
   from: {
@@ -25,7 +25,7 @@ const result = convert({
     system: "uk",
     gender: "men",
   },
-}); //Returns a string with the size converted
+}); // Returns a string of the size converted
 ```
 
 ## Service

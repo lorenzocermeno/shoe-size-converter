@@ -1,13 +1,11 @@
-enum Gender {
+export enum Gender {
   Men = "men",
   Women = "women",
 }
 
-enum System {
+export enum System {
   Cm = "cm",
   Eu = "eu",
   Uk = "uk",
   Us = "us",
 }
-
-export { Gender, System };

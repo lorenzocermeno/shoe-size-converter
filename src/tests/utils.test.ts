@@ -1,129 +1,98 @@
 import { Gender, System } from "../constants/constants";
 import { IData } from "../interface/interface";
 import {
-  getAvailableBrands,
-  getAvailableConvertionSizes,
-  getAvailableGenders,
+  getAvailableConversionSizes,
   getAvailableSizes,
-  getAvailableSystems,
-  getGender,
-  getSystem,
+  validateAndGetBrand,
+  validateAndGetGender,
+  validateAndGetSystem,
 } from "../utils/utils";
+import * as sizingData from "../data/data.json";
 
-const mockData: IData = {
-  nike: {
-    men: {
-      cm: {
-        men: ["28", "29", "30"],
-        women: ["20", "21", "22"],
-      },
-      eu: {
-        men: [],
-        women: [],
-      },
-      uk: {
-        men: [],
-        women: [],
-      },
-      us: {
-        men: [],
-        women: [],
-      },
-    },
-    women: {
-      cm: {
-        men: ["28", "29", "30"],
-        women: ["20", "21", "22"],
-      },
-      eu: {
-        men: [],
-        women: [],
-      },
-      uk: {
-        men: [],
-        women: [],
-      },
-      us: {
-        men: [],
-        women: [],
-      },
-    },
-  },
-};
-
-const mockBrand: string = "nike";
-const mockSystem: System = System.Cm;
+const data: IData = sizingData;
+const brand: string = "nike";
+const system: System = System.Cm;
 
 describe("src/utils/utils.ts", () => {
-  describe("getGender()", () => {
+  describe("validateAndGetGender()", () => {
+    const validGender = {
+      men: "men",
+      women: "women",
+    };
+
     test("should return enum value of provided gender", () => {
-      const validGender = {
-        men: "men",
-        women: "women",
-      };
-      expect(getGender(validGender.men)).toEqual(validGender.men as Gender);
-      expect(getGender(validGender.women)).toEqual(Gender.Women as Gender);
-    });
-  });
-
-  describe("getSystem()", () => {
-    test("should return enum value of provided system", () => {
-      const validSystem = {
-        cm: "cm",
-        eu: "eu",
-        uk: "uk",
-        us: "us",
-      };
-      expect(getSystem(validSystem.cm)).toEqual(validSystem.cm as Gender);
-      expect(getSystem(validSystem.eu)).toEqual(validSystem.eu as Gender);
-      expect(getSystem(validSystem.uk)).toEqual(validSystem.uk as Gender);
-      expect(getSystem(validSystem.us)).toEqual(validSystem.us as Gender);
-    });
-  });
-
-  describe("getAvailableBrands()", () => {
-    test("should return an array of strings", () => {
-      const result = ["nike"];
-      expect(getAvailableBrands(mockData)).toEqual(result);
-    });
-  });
-
-  describe("getAvailableGenders()", () => {
-    test("should return an array of strings", () => {
-      const result = ["men", "women"];
-      expect(getAvailableGenders(mockData, mockBrand)).toEqual(result);
-    });
-  });
-
-  describe("getAvailableSystems()", () => {
-    test("should return an array of strings", () => {
-      const result = ["cm", "eu", "uk", "us"];
-      expect(getAvailableSystems(mockData, mockBrand, Gender.Men)).toEqual(
-        result
+      expect(validateAndGetGender(brand, validGender.men)).toEqual(
+        validGender.men as Gender
       );
+      expect(validateAndGetGender(brand, validGender.women)).toEqual(
+        Gender.Women as Gender
+      );
+    });
+
+    test("should throw error if the provided gender is not an enum", () => {
+      const invalidGender = "abc";
+      expect(() => {
+        validateAndGetGender(brand, invalidGender);
+      }).toThrow(Error);
+    });
+  });
+
+  describe("validateAndGetSystem()", () => {
+    const validSystem = {
+      cm: "cm",
+      eu: "eu",
+      uk: "uk",
+      us: "us",
+    };
+
+    test("should return enum value of provided system", () => {
+      expect(validateAndGetSystem(brand, Gender.Women, validSystem.cm)).toEqual(
+        validSystem.cm as System
+      );
+      expect(validateAndGetSystem(brand, Gender.Men, validSystem.eu)).toEqual(
+        validSystem.eu as System
+      );
+      expect(validateAndGetSystem(brand, Gender.Women, validSystem.uk)).toEqual(
+        validSystem.uk as System
+      );
+      expect(validateAndGetSystem(brand, Gender.Men, validSystem.us)).toEqual(
+        validSystem.us as System
+      );
+    });
+
+    test("should throw error if the provided system is not an enum", () => {
+      const invalidSystem = "abc";
+      expect(() => {
+        validateAndGetSystem("adidas", Gender.Men, invalidSystem);
+      }).toThrow(Error);
+    });
+  });
+
+  describe("validateAndGetBrand()", () => {
+    test("should return the provided brand if it exists", () => {
+      expect(validateAndGetBrand(brand)).toEqual(brand);
+    });
+
+    test("should throw error if the provided brand does not exist", () => {
+      const notABrand = "notABrand";
+      expect(() => {
+        validateAndGetBrand(notABrand);
+      }).toThrow(Error);
     });
   });
 
   describe("getAvailableSizes()", () => {
     test("should return an array of strings", () => {
-      const result = mockData.nike.men.cm.men;
-      expect(
-        getAvailableSizes(mockData, mockBrand, Gender.Men, mockSystem)
-      ).toEqual(result);
+      const result = data.nike.men.cm.men;
+      expect(getAvailableSizes(brand, Gender.Men, system)).toEqual(result);
     });
   });
 
-  describe("getAvailableConvertionSizes()", () => {
+  describe("getAvailableConversionSizes()", () => {
     test("should return an array of strings", () => {
-      const result = mockData.nike.men.cm.women;
+      const result = data.nike.men.cm.women;
       expect(
-        getAvailableConvertionSizes(
-          mockData,
-          mockBrand,
-          Gender.Men,
-          Gender.Women,
-          mockSystem
-        )
+        getAvailableConversionSizes(brand, Gender.Men, Gender.Women, system)
       ).toEqual(result);
     });
   });

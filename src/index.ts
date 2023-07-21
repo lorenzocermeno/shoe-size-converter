@@ -7,19 +7,13 @@ import {
 import * as sizingData from "./data/data.json";
 import { Gender, System } from "./constants/constants";
 import {
-  getAvailableBrands,
-  getAvailableConvertionSizes,
-  getAvailableGenders,
+  getAvailableConversionSizes,
   getAvailableSizes,
-  getAvailableSystems,
-  getGender,
-  getSystem,
-  throwErrorIfParameterIsEmpty,
+  validateAndGetBrand,
+  validateAndGetGender,
+  validateAndGetSize,
+  validateAndGetSystem,
 } from "./utils/utils";
-
-function isNotAvailable(input: string) {
-  return `'${input}' is not available`;
-}
 
 const data: IData = sizingData;
 
@@ -44,8 +38,7 @@ function getDesiredSize(
   fromGender: Gender,
   cmSize: string
 ): string {
-  const cmSizes = getAvailableConvertionSizes(
-    data,
+  const cmSizes = getAvailableConversionSizes(
     desiredConvertionData.brand,
     fromGender,
     desiredConvertionData.gender,
@@ -67,8 +60,7 @@ function getDesiredSize(
     );
   }
 
-  const sizes = getAvailableConvertionSizes(
-    data,
+  const sizes = getAvailableConversionSizes(
     desiredConvertionData.brand,
     fromGender,
     desiredConvertionData.gender,
@@ -86,14 +78,12 @@ function getDesiredSize(
 
 function getCmSize(conversionParameters: IConvertionParameters): string {
   const sizes = getAvailableSizes(
-    data,
     conversionParameters.brand,
     conversionParameters.gender,
     conversionParameters.system
   );
 
   const cmSizes = getAvailableSizes(
-    data,
     conversionParameters.brand,
     conversionParameters.gender,
     System.Cm
@@ -104,58 +94,22 @@ function getCmSize(conversionParameters: IConvertionParameters): string {
   return cmSizes[index];
 }
 
-function validateSize(
-  brand: string,
-  gender: Gender,
-  system: System,
-  size: string
-): string {
-  throwErrorIfParameterIsEmpty(size, "Size");
-
-  if (!getAvailableSizes(data, brand, gender, system).includes(size)) {
-    throw new Error(`The size ${isNotAvailable(size)}`);
-  }
-
-  return size;
-}
-
-function validateBrand(brand: string): string {
-  throwErrorIfParameterIsEmpty(brand, "Brand");
-
-  if (!getAvailableBrands(data).includes(brand)) {
-    throw new Error(`The brand ${isNotAvailable(brand)}`);
-  }
-  return brand;
-}
-
-function validateGender(brand: string, gender: string): Gender {
-  throwErrorIfParameterIsEmpty(gender, "Gender");
-
-  if (!getAvailableGenders(data, brand).includes(gender)) {
-    throw new Error(`The gender ${isNotAvailable(gender)}`);
-  }
-  return getGender(gender);
-}
-
-function validateSystem(brand: string, gender: Gender, system: string): System {
-  throwErrorIfParameterIsEmpty(system, "System");
-
-  if (!getAvailableSystems(data, brand, gender).includes(system)) {
-    throw new Error(
-      `The system ${isNotAvailable(system)} for ${gender}'s ${brand}`
-    );
-  }
-
-  return getSystem(system);
-}
-
 function getPropertiesToConvertFrom(
   convertFrom: IConvertionParameters
 ): IConvertionParameters {
-  const brand = validateBrand(convertFrom.brand);
-  const gender: Gender = validateGender(brand, convertFrom.gender);
-  const system: System = validateSystem(brand, gender, convertFrom.system);
-  const convertFromSize = validateSize(brand, gender, system, convertFrom.size);
+  const brand = validateAndGetBrand(convertFrom.brand);
+  const gender: Gender = validateAndGetGender(brand, convertFrom.gender);
+  const system: System = validateAndGetSystem(
+    brand,
+    gender,
+    convertFrom.system
+  );
+  const convertFromSize = validateAndGetSize(
+    brand,
+    gender,
+    system,
+    convertFrom.size
+  );
 
   return {
     brand: brand,
@@ -168,9 +122,9 @@ function getPropertiesToConvertFrom(
 function getPropertiesToConvertTo(
   convertTo: IConvertionResult
 ): IConvertionResult {
-  const brand = validateBrand(convertTo.brand);
-  const gender = validateGender(brand, convertTo.gender);
-  const system = validateSystem(brand, gender, convertTo.system);
+  const brand = validateAndGetBrand(convertTo.brand);
+  const gender = validateAndGetGender(brand, convertTo.gender);
+  const system = validateAndGetSystem(brand, gender, convertTo.system);
 
   return {
     brand: brand,

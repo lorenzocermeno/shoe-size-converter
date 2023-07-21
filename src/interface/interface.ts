@@ -1,18 +1,20 @@
 import { Gender, System } from "../constants/constants";
 
-interface IGenders {
-  men: ISystems;
-  women: ISystems;
+interface ISizes {
+  men: string[];
+  women: string[];
 }
+
 interface ISystems {
   cm: ISizes;
   eu: ISizes;
   uk: ISizes;
   us: ISizes;
 }
-interface ISizes {
-  men: string[];
-  women: string[];
+
+interface IGenders {
+  men: ISystems;
+  women: ISystems;
 }
 
 interface IData {
@@ -33,4 +35,12 @@ interface IConvert {
   to: IConvertionResult;
 }
 
-export { IData, IConvertionParameters, IConvertionResult, IConvert };
+export {
+  IData,
+  IConvertionParameters,
+  IConvertionResult,
+  IConvert,
+  IGenders,
+  ISystems,
+  ISizes,
+};
