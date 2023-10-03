@@ -148,19 +148,3 @@ function getShoeSizeData(): IData {
 }
 
 export { convert, getShoeSizeData };
-
-console.log(
-  convert({
-    from: {
-      brand: "nike",
-      gender: Gender.Men,
-      system: System.Eu,
-      size: "43",
-    },
-    to: {
-      brand: "adidas",
-      gender: Gender.Men,
-      system: System.Eu,
-    },
-  })
-);

@@ -1,6 +1,6 @@
 {
   "name": "shoe-converter",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "Making it possible to convert the shoe size and gender of one brand to another.",
   "repository": {
     "type": "git",
